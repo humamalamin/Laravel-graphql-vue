@@ -10,6 +10,11 @@ type Query {
 
     books: [Book] @all
     book(id: ID @eq): Book @find
+    booksByFeatured(featured: Boolean! @eq): [Book] @all
+    someQomplexQuery(search: String!): [Book]
+
+    categories: [Category] @all
+    category(id: ID @eq): Category @find
 }
 
 type Mutation {
@@ -25,6 +30,44 @@ type Mutation {
     deleteUser(
         id: ID @rules(apply: ["required"])
     ): User @delete(model: "App\\User")
+
+    createCategory(
+        name: String @rules(apply: ["required", "unique:categories,name"])
+    ): Category @create
+
+    updateCategory(
+        id: ID @rules(apply: ["required"])
+        name: String @rules(apply: ["required", "unique:categories,name"])
+    ): Category @update
+    
+    deleteCategory(
+        id: ID! @rules(apply: ["required"])
+    ): Category @delete
+
+    createBook(
+        title: String! @rules(apply: ["required"])
+        author: String! @rules(apply: ["required"])
+        image: String
+        link: String
+        description: String
+        featured: Boolean
+        category: Int!
+    ): Book @create
+
+    updateBook(
+        id: ID @rules(apply: ["required"])
+        title: String! @rules(apply: ["required"])
+        author: String! @rules(apply: ["required"])
+        image: String
+        link: String
+        description: String
+        featured: Boolean
+        category: Int!
+    ): Book @update
+
+    deleteBook(
+        id: ID! @rules(apply: ["required"])
+    ): Book @delete
 }
 
 type User {
